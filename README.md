@@ -16,18 +16,26 @@ Breathwork App is an Android application that lets users practice different brea
 - Language: Dart
 - Database: SQFLite (local)
 
-  ## Installation
-  1. [Install flutter](https://docs.flutter.dev/get-started/install)
-  2. Add flutter to system PATH
-  3. Verify flutter is installed correctly
+## Installation
+  
+1. **Install Flutter**
+  [Flutter Install Guide](https://docs.flutter.dev/get-started/install)
+
+2. **Add Flutter to system PATH**
+  
+3. **Verify Flutter is installed correctly**
      `flutter doctor`
-  5. Clone repository
+     
+4. **Clone repository**
      `git clone https://github.com/debra-soth/breathwork_app.git`
-  6. Navigate to the project folder
-     ` cd breathwork_app`
-  7. Install dependencies
+     
+5. **Navigate to the project folder**
+     `cd breathwork_app`
+     
+6. **Install dependencies**
      `flutter pub get`
-  8. Run the app on an Android device or emulator
+     
+7. **Run the app on an Android device or emulator**
      `flutter run`
      
 ## Contributors
