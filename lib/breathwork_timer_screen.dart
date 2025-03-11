@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'dart:async'; // For the timer
 
 class BreathworkTimerScreen extends StatefulWidget {
   final String patternName;
   final int inhale;
   final int hold;
   final int exhale;
-  final int totalRounds; // ✅ Add totalRounds
+  final int totalRounds; // add totalRounds
 
   const BreathworkTimerScreen({super.key, 
     required this.patternName,
     required this.inhale,
     required this.hold,
     required this.exhale,
-    required this.totalRounds, // ✅ Make it required
+    required this.totalRounds,
   });
 
   @override
   _BreathworkTimerScreenState createState() => _BreathworkTimerScreenState();
 }
+
+// Manage changes in screen from countdown etc. 
+// SingleTickerProviderStateMixin used for animation
 
 class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with SingleTickerProviderStateMixin {
   String _currentPhase = "Start";
@@ -27,9 +30,11 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
   int _cycleCount = 0;
   bool _isPaused = false;
   bool _isStarted = false;
-  late AnimationController _animationController;
+  late AnimationController _animationController; // Wave animation
   late Animation<double> _animation;
 
+  // Initializing timer and animation
+  
   @override
   void initState() {
     super.initState();
@@ -45,6 +50,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
     );
   }
 
+  // Stopping timer and animation
   @override
   void dispose() {
     if (_isStarted) {
@@ -54,6 +60,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
     super.dispose();
   }
 
+  // Start breathwork session
   void _startBreathworkCycle() {
     setState(() {
       _isStarted = true;
@@ -62,6 +69,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
       _animationController.forward();
     });
 
+    // Handling countdown so that timer runs every second
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!_isPaused) {
         setState(() {
@@ -85,7 +93,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
             } else if (_currentPhase == "Exhale") {
               _cycleCount++;
 
-              // ✅ Check if total rounds are completed
+              // Check if total rounds are completed
               if (_cycleCount >= widget.totalRounds) {
                 _endSession();
                 return;
@@ -100,9 +108,10 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
       }
     });
   }
-
+  
+// Stopping the timer
   void _endSession() {
-    _timer.cancel(); // ✅ Stop the timer
+    _timer.cancel();
     _animationController.reset();
 
     setState(() {
@@ -129,7 +138,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
     );
   }
 
-
+// Manually pausing and stopping timer
   void _pauseTimer() {
     setState(() {
       _isPaused = !_isPaused;
@@ -156,10 +165,10 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
       _currentPhase = "Session Stopped";
     });
 
-    Navigator.pop(context); // ✅ Return to Home Screen
+    Navigator.pop(context); // Return to Home Screen
   }
 
-
+// UI Layout
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,7 +209,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
+                    ElevatedButton( // Start, Stop and Pause buttons
                       onPressed: _isStarted ? _pauseTimer : _startBreathworkCycle,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
@@ -228,6 +237,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
   }
 }
 
+// Paints the wave animation
 class WavePainter extends CustomPainter {
   final double animationValue;
   final String phase;
