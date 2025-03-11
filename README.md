@@ -37,6 +37,9 @@ Breathwork App is an Android application that lets users practice different brea
      
 7. **Run the app on an Android device or emulator**
      `flutter run`
-     
+
+### APK File
+An APK file `app-release.apk` is also provided for direct installation on Android devices.
+
 ## Contributors
 Debra Soth
