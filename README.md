@@ -16,7 +16,7 @@ Breathwork App is an Android application that lets users practice different brea
 - Language: Dart
 - Database: SQFLite (local)
 
-## Installation
+## Installation (for Android Studio)
   
 1. **Install Flutter**
   [Flutter Install Guide](https://docs.flutter.dev/get-started/install)
