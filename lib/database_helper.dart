@@ -3,18 +3,21 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:developer';
 
+// Singleton pattern for database 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
   DatabaseHelper._init();
 
+  // Initialize database only when accessed for the first time
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDB();
     return _database!;
   }
 
+  // Initializing database 
   Future<Database> _initDB() async {
     try {
       print("🔥 Initializing database...");
@@ -36,11 +39,12 @@ class DatabaseHelper {
         },
       );
     } catch (e) {
-      print("❌ Database initialization error: $e"); // ✅ Debug print
+      print("❌ Database initialization error: $e"); // Debug print
       rethrow;
     }
   }
 
+  // Create user table
   Future _createDB(Database db, int version) async {
     try {
       await db.execute('''
@@ -51,7 +55,7 @@ class DatabaseHelper {
         password TEXT NOT NULL
       )
     ''');
-
+// Create breathwork patterns table
       await db.execute('''
       CREATE TABLE breathwork_patterns (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,7 +75,7 @@ class DatabaseHelper {
 
       print("✅ Database tables created successfully!");
 
-      // ✅ Insert test user
+      // Insert test user
       await db.insert('users', {
         'username': 'test_user',
         'email': 'test@example.com',
@@ -84,8 +88,9 @@ class DatabaseHelper {
     }
   }
 
+  // Database upgrade handling
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 5) { // ✅ Update to a new version (increment from previous version)
+    if (oldVersion < 5) { // Update to a new version (increment from previous version)
       // Check if 'iconCode' column exists before adding it
       List<Map<String, dynamic>> columns = await db.rawQuery("PRAGMA table_info(breathwork_patterns)");
 
@@ -109,7 +114,7 @@ class DatabaseHelper {
   }
 
 
-  // **Check if email exists**
+  // Check if email exists
   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
     final db = await instance.database;
     final result = await db.query(
@@ -135,7 +140,7 @@ class DatabaseHelper {
     final db = await instance.database;
     final result = await db.query(
       'users',
-      columns: ['id', 'username', 'email'],  // ✅ Ensure 'username' is included
+      columns: ['id', 'username', 'email'],  // Ensure 'username' is included
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -143,21 +148,21 @@ class DatabaseHelper {
   }
 
 
-  // **Insert User**
+  // Insert User
   Future<int?> insertUser(String username, String email, String password) async {
-    print("Inserting user: $username, $email"); // ✅ Debug print
+    print("Inserting user: $username, $email"); // Debug print
     final db = await instance.database;
     int userId = await db.insert(
       'users',
       {'username': username, 'email': email, 'password': password},
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    print("Inserted user ID: $userId"); // ✅ Debug print
+    print("Inserted user ID: $userId"); // Debug print
     return userId > 0 ? userId : null;
   }
 
 
-  // **Authenticate User**
+  // Authenticate User
   Future<Map<String, dynamic>?> getUser(String email, String password) async {
     final db = await instance.database;
     final result = await db.query(
@@ -183,7 +188,7 @@ class DatabaseHelper {
   }) async {
     final db = await instance.database;
 
-    print("Saving pattern: $name for user $userId"); // ✅ Debug log
+    print("Saving pattern: $name for user $userId"); // Debug log
 
     int patternId = await db.insert(
       'breathwork_patterns',
@@ -201,7 +206,7 @@ class DatabaseHelper {
       },
     );
 
-    print("Pattern inserted with ID: $patternId"); // ✅ Debug log
+    print("Pattern inserted with ID: $patternId"); // Debug log
     return patternId > 0 ? patternId : null;
   }
 
@@ -212,7 +217,7 @@ class DatabaseHelper {
     final db = await instance.database;
     return await db.query(
       'breathwork_patterns',
-      where: 'user_id = ?', // ✅ Ensure only patterns for this user are returned
+      where: 'user_id = ?', // Ensure only patterns for this user are returned
       whereArgs: [userId],
     );
   }
@@ -222,7 +227,7 @@ class DatabaseHelper {
     final db = await instance.database;
     return await db.delete(
       'breathwork_patterns',
-      where: 'id = ?', // ✅ Delete pattern by ID
+      where: 'id = ?', // Delete pattern by ID
       whereArgs: [patternId],
     );
   }
