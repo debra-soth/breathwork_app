@@ -13,6 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Get user input
   void _loginUser() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -24,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    // Call database to check if user already exists
     final user = await DatabaseHelper.instance.getUser(email, password);
 
     if (user != null) {
@@ -75,6 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  // Email input field
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -86,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
+                  // Password input field
                   TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(
@@ -97,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: true,
                   ),
                   const SizedBox(height: 20),
+                  // Login button 
                   ElevatedButton(
                     onPressed: _loginUser,
                     style: ElevatedButton.styleFrom(
@@ -110,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text('Log In'),
                   ),
                   const SizedBox(height: 20),
+                  // Navigate back to welcome screen
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
