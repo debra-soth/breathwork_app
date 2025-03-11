@@ -182,7 +182,7 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
             animation: _animation,
             builder: (context, child) {
               return CustomPaint(
-                painter: WavePainter(_animation.value, _currentPhase),
+                painter: WavePainter(_animation.value, _currentPhase), // calls wave animation
                 child: Container(),
               );
             },
@@ -209,7 +209,8 @@ class _BreathworkTimerScreenState extends State<BreathworkTimerScreen> with Sing
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton( // Start, Stop and Pause buttons
+                    // Start, Stop and Pause buttons
+                    ElevatedButton( 
                       onPressed: _isStarted ? _pauseTimer : _startBreathworkCycle,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
