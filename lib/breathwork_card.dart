@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Define card properties
 class BreathworkCard extends StatelessWidget {
   final String duration;
   final String title;
@@ -7,7 +8,8 @@ class BreathworkCard extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const BreathworkCard({super.key, 
+  // Initializing card
+  const BreathworkCard({super.key, // super.key is used to track widget
     required this.duration,
     required this.title,
     required this.description,
@@ -15,6 +17,7 @@ class BreathworkCard extends StatelessWidget {
     required this.onTap,
   });
 
+  // Creating material card for breathwork patterns
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -27,7 +30,7 @@ class BreathworkCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Row(
+          child: Row( // places items horizontically
             children: [
               Icon(
                 icon,
