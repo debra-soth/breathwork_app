@@ -26,6 +26,7 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Welcome Icon and text
                 Icon(
                   Icons.waves,
                   size: 100,
@@ -42,6 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 40),
+                // Login button
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -62,6 +64,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: Text('Log In'),
                 ),
                 SizedBox(height: 20),
+                // Sign up button
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
