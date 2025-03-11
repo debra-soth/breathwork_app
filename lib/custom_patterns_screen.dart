@@ -15,6 +15,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
   final TextEditingController _patternNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
+  // Set default duration for breathwork pattern 
   int _inhaleDuration = 4;
   int _holdAfterInhaleDuration = 4;
   int _exhaleDuration = 4;
@@ -35,17 +36,20 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
     Icons.accessibility_new,
   ];
 
+  // Formats total duration in min and sec
   String _formatDuration(int totalSeconds) {
     int minutes = totalSeconds ~/ 60;
     int seconds = totalSeconds % 60;
     return "$minutes min ${seconds}s";
   }
 
+  // Calculates total session duration
   int _calculateTotalDuration() {
     int breathCycleDuration = _inhaleDuration + _holdAfterInhaleDuration + _exhaleDuration + _holdAfterExhaleDuration;
     return breathCycleDuration * _totalRounds;
   }
 
+  // Saves pattern to database
   void _savePattern() async {
     if (_patternNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,6 +60,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
 
     int totalDuration = _calculateTotalDuration();
 
+    // Insert breathwork pattern into database
     int? patternId = await DatabaseHelper.instance.insertBreathworkPattern(
       name: _patternNameController.text.trim(),
       description: _descriptionController.text.trim(),
@@ -65,10 +70,11 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
       holdAfterExhaleDuration: _holdAfterExhaleDuration,
       totalRounds: _totalRounds,
       totalDuration: totalDuration,
-      userId: widget.userId, // ✅ Save pattern for the correct user
+      userId: widget.userId, // Save pattern for the correct user
       iconCode: _selectedIcon.codePoint,
     );
 
+    // Check if pattern was saved
     if (patternId != null) {
       print("Pattern saved successfully with ID: $patternId for user ${widget.userId}");
 
@@ -76,7 +82,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
         const SnackBar(content: Text('Breathwork Pattern Saved!')),
       );
 
-      // ✅ Go back to Home Screen and reload patterns
+      // Go back to Home Screen and reload patterns
       Navigator.pop(context, true);
     } else {
       print("Pattern save failed!");
@@ -87,6 +93,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
   }
 
 
+// UI for custom patterns screen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,6 +115,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
               controller: _descriptionController,
               decoration: const InputDecoration(labelText: 'Optional Description'),
             ),
+            // Sliders for duration
             const SizedBox(height: 10),
             _buildSlider('Inhale Duration (seconds)', _inhaleDuration, (value) {
               setState(() {
@@ -135,8 +143,9 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
               });
             }),
             const SizedBox(height: 10),
+            // Display total duration
             Text(
-              'Total Duration: ${_formatDuration(_calculateTotalDuration())}', // ✅ Format in minutes and seconds
+              'Total Duration: ${_formatDuration(_calculateTotalDuration())}', // Format in minutes and seconds
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -145,7 +154,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
             ),
             const SizedBox(height: 20),
 
-            // **Icon Picker**
+            // Icon Picker
             Text("Select an Icon:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             DropdownButton<IconData>(
               value: _selectedIcon,
@@ -163,6 +172,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
             ),
             const SizedBox(height: 20),
 
+            // Save button
             Center(
               child: ElevatedButton(
                 onPressed: _savePattern,
@@ -179,6 +189,7 @@ class _CustomPatternsScreenState extends State<CustomPatternsScreen> {
     );
   }
 
+  // Helper method for sliders
   Widget _buildSlider(String label, int value, Function(int) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
