@@ -16,7 +16,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   bool _isValidEmail(String email) {
-    // ✅ Email validation using RegExp
+    // Email validation using RegExp used below
     final RegExp emailRegex = RegExp(
       r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
     );
@@ -24,31 +24,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _signUpUser() async {
-    print("Sign-up button clicked!"); // ✅ Debug print
+    print("Sign-up button clicked!"); // Debug print
 
     final username = _usernameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
-
+    // Check for empty fields
     if (username.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      print("Some fields are empty!"); // ✅ Debug print
+      print("Some fields are empty!"); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
       );
       return;
     }
-
+    // Check if email is in right format 
     if (!_isValidEmail(email)) {
-      print("Invalid email format!"); // ✅ Debug print
+      print("Invalid email format!"); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a valid email address')),
       );
       return;
     }
-
+    // Check if passwords match
     if (password != confirmPassword) {
-      print("Passwords do not match!"); // ✅ Debug print
+      print("Passwords do not match!"); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Passwords do not match')),
       );
@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // Check if username already exists
     final existingUsername = await DatabaseHelper.instance.getUserByUsername(username);
     if (existingUsername != null) {
-      print("Username already taken!"); // ✅ Debug print
+      print("Username already taken!"); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Username already taken')),
       );
@@ -68,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // Check if email already exists
     final existingUser = await DatabaseHelper.instance.getUserByEmail(email);
     if (existingUser != null) {
-      print("Email already in use!"); // ✅ Debug print
+      print("Email already in use!"); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email already in use')),
       );
@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // Insert new user and get userId
     final int? userId = await DatabaseHelper.instance.insertUser(username, email, password);
     if (userId != null) {
-      print("User registered successfully with ID: $userId"); // ✅ Debug print
+      print("User registered successfully with ID: $userId"); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Signup successful! Logging in...')),
       );
@@ -87,13 +87,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         MaterialPageRoute(builder: (context) => HomeScreen(userId: userId)),
       );
     } else {
-      print("Signup failed!"); // ✅ Debug print
+      print("Signup failed!"); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Signup failed. Please try again.')),
       );
     }
   }
 
+  // UI for signup screen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,6 +129,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  // Username input
                   TextField(
                     controller: _usernameController,
                     decoration: InputDecoration(
@@ -138,6 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  // Email input
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -149,6 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
+                  // Password input
                   TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(
@@ -160,6 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: true,
                   ),
                   const SizedBox(height: 20),
+                  // confirm password
                   TextField(
                     controller: _confirmPasswordController,
                     decoration: InputDecoration(
@@ -171,6 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: true,
                   ),
                   const SizedBox(height: 20),
+                  // sign up user button
                   ElevatedButton(
                     onPressed: _signUpUser,
                     style: ElevatedButton.styleFrom(
