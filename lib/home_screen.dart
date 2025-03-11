@@ -17,14 +17,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String username = "User";
   List<Map<String, dynamic>> customPatterns = [];
-
+  
+// Load user and their saved patterns 
   @override
   void initState() {
     super.initState();
     _loadUsername();
-    _loadCustomPatterns(); // ✅ Fetch custom patterns
+    _loadCustomPatterns(); // Fetch custom patterns
   }
 
+  // Fetch username 
   void _loadUsername() async {
     final user = await DatabaseHelper.instance.getUserById(widget.userId);
     if (user != null && user['username'] != null) {
@@ -33,7 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
-
+  
+// Fetch custom patterns
   void _loadCustomPatterns() async {
     print("Loading custom patterns for user ${widget.userId}");
     final patterns = await DatabaseHelper.instance.getBreathworkPatternsByUser(widget.userId);
@@ -45,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Loaded ${patterns.length} custom patterns");
   }
 
+  // Delete pattern on long press
   void _confirmDeletePattern(int patternId) {
     showDialog(
       context: context,
@@ -59,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           TextButton(
             onPressed: () async {
               Navigator.pop(context); // Close dialog
-              await _deletePattern(patternId); // ✅ Delete pattern
+              await _deletePattern(patternId); // Delete pattern
             },
             child: const Text("Delete", style: TextStyle(color: Colors.red)),
           ),
@@ -68,16 +72,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Deletes pattern in database
   Future<void> _deletePattern(int patternId) async {
     await DatabaseHelper.instance.deleteBreathworkPattern(patternId);
-    _loadCustomPatterns(); // ✅ Reload patterns after deletion
+    _loadCustomPatterns(); // Reload patterns after deletion
   }
-
+  
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return WillPopScope( // Reloads patterns when going back
       onWillPop: () async {
-        _loadCustomPatterns(); // ✅ Reload patterns when going back
+        _loadCustomPatterns();
         return true;
       },
       child: Scaffold(
@@ -114,6 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+
+                  // Displays breathwork patterns
                   Expanded(
                     child: ListView(
                       children: [
@@ -155,6 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+
+        // Bottom nav bar
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(
@@ -179,11 +188,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 bool? patternAdded = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CustomPatternsScreen(userId: widget.userId), // ✅ Pass userId
+                    builder: (context) => CustomPatternsScreen(userId: widget.userId), // Pass userId
                   ),
                 );
                 if (patternAdded == true) {
-                  _loadCustomPatterns(); // ✅ Reload patterns if a new one was added
+                  _loadCustomPatterns(); // Reload patterns if a new one was added
                 }
                 break;
               case 2:
